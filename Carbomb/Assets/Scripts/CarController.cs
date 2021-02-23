@@ -37,23 +37,37 @@ public class CarController : MonoBehaviour
     [SerializeField] [Range(0.1f, 100f)] private float fuelRechargeRatio = 10f;
     [SerializeField] private bool fuelRecharge = false;
     [SerializeField] private bool fuelCooldown = false;
+    private bool soundTransition;
+    private bool collisionSoundCooldown = false;
     private Coroutine fuelCoroutine;
+    private Coroutine soundCoroutine;
 
     [Header("Other")]
     private int layerMask = 1 << 9;
     private float groundLevel = 0;
+    [SerializeField] Material redSkin;
+    [SerializeField] Material blueSkin;
+    [SerializeField] Material yellowSkin;
+    [SerializeField] Material whiteSkin;
 
     [Header("Components")]
+
     [SerializeField] private List<WheelCollider> wheelsThrottle;
     [SerializeField] private List<WheelCollider> wheelsSteer;
     [SerializeField] private List<Transform> wheelsTransform;
+    [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private Transform centerOfMass;
-    [SerializeField] private AudioSource engineForward;
-    [SerializeField] private AudioSource engineReverse;
-    [HideInInspector] public PlayerStats playerStats;
+    [SerializeField] private AudioSource effectsAudioSource;
+    [SerializeField] private AudioSource engineAudioSource;
+    [SerializeField] private AudioClip collisionSFX;
+    [SerializeField] private AudioClip collisionSFX2;
+    [SerializeField] private AudioClip nitroBreakSFX;
+    [SerializeField] public PlayerStats playerStats;
     [HideInInspector] public BombScript bomb;
+    [SerializeField] SpriteRenderer circleIndicator;
     [SerializeField] ParticleSystem trailParticle;
+    [SerializeField] ParticleSystem nitroParticle;
     private ParticleSystem.EmissionModule trailEmission;
     private ParticleSystem.MinMaxCurve trailCurve;
 
@@ -80,6 +94,7 @@ public class CarController : MonoBehaviour
         trailCurve = trailEmission.rateOverTime;
         rigidBody.centerOfMass = centerOfMass.localPosition;
         fuelCurrent = fuelMax;
+        nitroParticle.Stop();
     }
 
 
@@ -87,7 +102,7 @@ public class CarController : MonoBehaviour
     {
         speed = rigidBody.velocity.magnitude;
         lastFrameVelocity = rigidBody.velocity;
-       // if (grounded) transform.position = new Vector3(transform.position.x, groundLevel, transform.position.z);
+
         if (!stunned && active)
         {
             ReadInput();
@@ -111,6 +126,7 @@ public class CarController : MonoBehaviour
 
         //Prevent car from rotating on x and z, doesn't trigger while reflecting to avoid rigidbody jitter
         if (!reflecting) rigidBody.rotation = Quaternion.Euler(0, rigidBody.rotation.eulerAngles.y, 0);
+        if (grounded) transform.position = new Vector3(transform.position.x, groundLevel, transform.position.z);
     }
 
     #endregion
@@ -118,11 +134,14 @@ public class CarController : MonoBehaviour
     #region Movement
     void ReadInput()
     {
-        Vector2 input = keyMap.car.move.ReadValue<Vector2>();
-        throttleValue = input.y;
-        steerValue = input.x;
-        if (keyMap.car.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
-        if (keyMap.car.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
+        /*
+        Vector2 input = keyMap.car3.move.ReadValue<Vector2>();
+        if (keyMap.car3.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
+        if (keyMap.car3.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
+         throttleValue = input.y;
+         steerValue = input.x;
+        */
+        TemporaryMultiPlayerControls();
 
     }
 
@@ -159,7 +178,7 @@ public class CarController : MonoBehaviour
     // Increase motorTorque in WheelMovement() if nitro button is held and car has fuel
     void Nitro()
     {
-        if (nitroButtonHeld)
+        if (nitroButtonHeld && !blocked)
         {
             if (throttleValue > 0)
             {
@@ -172,7 +191,6 @@ public class CarController : MonoBehaviour
                 }
                 else
                 {
-                    if (fuelCoroutine != null) StopCoroutine(fuelCoroutine);
                     StartCoroutine(FuelRechargeCooldown());
                 }
             }
@@ -198,10 +216,11 @@ public class CarController : MonoBehaviour
     //If player deplated all of the fuel, there will be a penalty delay before fuel can recharge
     private IEnumerator FuelRechargeCooldown()
     {
-        //Play sfx break
+        effectsAudioSource.clip = nitroBreakSFX;
+        effectsAudioSource.Play();
         nitroButtonHeld = false;
         fuelCooldown = true;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.6f);
         fuelCooldown = false;
     }
 
@@ -218,9 +237,6 @@ public class CarController : MonoBehaviour
             throttleValue = 0f;
             steerValue = 0f;
             StartCoroutine(RecoverFromDamage());
-            //  if (bombedCount >= 10) StartCoroutine(Eliminated());
-            //    else  StartCoroutine(RecoverFromDamage());
-
         }
     }
 
@@ -242,7 +258,21 @@ public class CarController : MonoBehaviour
     {
         Vector3 relativePoint = transform.InverseTransformPoint(col.gameObject.transform.position);
         //If car has bomb and collides with object with its front side, it will be reflected accordingly to collision point
-        if (bomb != null && relativePoint.z > 0 && (col.gameObject.CompareTag("Wall") || col.gameObject.CompareTag("Car")) && speed > 50f) InstantReflect(col.contacts[0].normal);
+        if (relativePoint.z > 0)
+        {
+            if (!collisionSoundCooldown)
+            {
+                int a = Random.Range(0, 2);
+                if (a == 0) effectsAudioSource.clip = collisionSFX;
+                else effectsAudioSource.clip = collisionSFX2;
+                effectsAudioSource.Play();
+                StartCoroutine(CollisionSoundCooldown());
+            }
+
+            if (bomb != null && (col.gameObject.CompareTag("Wall") || col.gameObject.CompareTag("Car")) && speed > 50f) InstantReflect(col.contacts[0].normal);
+
+        }
+
         // StartCoroutine(Reflect(Quaternion.LookRotation(Vector3.Reflect(transform.forward, col.contacts[0].normal), transform.up)));
 
 
@@ -253,9 +283,16 @@ public class CarController : MonoBehaviour
             if (script.bomb == null)
             {
                 StartCoroutine(afterPassCor());
-                bomb.StartCoroutine(bomb.PassToPlayer(script));
+                bomb.StartCoroutine(bomb.PassToPlayer(script, 0f, false));
             }
         }
+    }
+
+    private IEnumerator CollisionSoundCooldown()
+    {
+        collisionSoundCooldown = true;
+        yield return new WaitForSeconds(0.4f);
+        collisionSoundCooldown = false;
     }
 
 
@@ -284,6 +321,7 @@ public class CarController : MonoBehaviour
         }
 
         stunned = true;
+        nitroParticle.Stop();
         if (StunDuration > stunTimer) stunTimer = StunDuration;
     }
 
@@ -334,37 +372,39 @@ public class CarController : MonoBehaviour
 
     #region Effects
 
-    //Checks if there's an object blocking this car's front side
+
     void EngineSound()
     {
-        if (!blocked)
+
+        if (nitroActive)
         {
-            bool accelDirectionIsFwd = throttleValue >= 0;
-            float dot = Vector3.Dot(transform.forward, rigidBody.velocity);
-            float speedDirection;
-            if (Mathf.Abs(dot) > 0.1f) speedDirection = dot < 0 ? -(speed / 210f) : (speed / 140f);
-            else speedDirection = 0f;
+            if (soundCoroutine != null) StopCoroutine(soundCoroutine);
+            nitroParticle.Play();
+            soundTransition = true;
+            engineAudioSource.volume = Mathf.Lerp(0.1f, 1f, speed / 70f * 1.2f);
+            engineAudioSource.pitch = Mathf.Lerp(0.3f, 1f, speed / 70f + (Mathf.Sin(Time.time) * .1f));
 
-            if (speedDirection < 0.0f)
-            {
-                engineForward.volume = 0.0f;
-                engineReverse.volume = Mathf.Lerp(0.1f, 1f, -speedDirection * 1.2f);
-                engineReverse.pitch = Mathf.Lerp(0.1f, 1f, -speedDirection + (Mathf.Sin(Time.time) * .1f));
-            }
-            else
-            {
-                engineReverse.volume = 0.0f;
-                engineForward.volume = Mathf.Lerp(0.1f, 1f, speedDirection * 1.2f);
-                engineForward.pitch = Mathf.Lerp(0.3f, 1f, speedDirection + (Mathf.Sin(Time.time) * .1f));
-            }
         }
-        else
+        else if (soundCoroutine == null && soundTransition) StartCoroutine(SmoothSoundTransition());
+
+        else nitroParticle.Stop();
+    }
+
+    private IEnumerator SmoothSoundTransition()
+    {
+        nitroParticle.Stop();
+        float startVolume = engineAudioSource.volume;
+        float elapsedTime = 0;
+        float waitTime = 0.55f;
+
+        while (elapsedTime < waitTime)
         {
-            engineForward.volume = 0.0f;
-            engineForward.volume = 0.0f;
+            engineAudioSource.volume = Mathf.Lerp(startVolume, 0f, (elapsedTime / waitTime));
+            engineAudioSource.pitch = Mathf.Lerp(0.3f, 1f, speed / 70f + (Mathf.Sin(Time.time) * .1f));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
         }
-
-
+        soundTransition = false;
     }
     void ParticleEffects()
     {
@@ -384,6 +424,14 @@ public class CarController : MonoBehaviour
         playerStats.SetStartingValues(gameObject.name);
     }
 
+    public void ChangeCarColor(int a)
+    {
+        if (a == 1) meshRenderer.material = redSkin;
+        else if (a == 2) meshRenderer.material = blueSkin;
+        else if (a == 3) meshRenderer.material = yellowSkin;
+        else if (a == 4) meshRenderer.material = whiteSkin;
+
+    }
 
     //Checks if there's wall or another car blocking this object
     private void CheckForBlock()
@@ -407,6 +455,39 @@ public class CarController : MonoBehaviour
         rigidBody.constraints = RigidbodyConstraints.FreezePositionY;
         groundLevel = transform.position.y;
         grounded = true;
+    }
+
+
+    private void TemporaryMultiPlayerControls()
+    {
+        Vector2 input=Vector2.zero;
+        if (playerNumber == 1)
+        {
+             input = keyMap.car1.move.ReadValue<Vector2>();
+            if (keyMap.car1.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
+            if (keyMap.car1.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
+        }
+        else if (playerNumber == 2)
+        {
+             input = keyMap.car2.move.ReadValue<Vector2>();
+            if (keyMap.car2.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
+            if (keyMap.car2.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
+        }
+        else if (playerNumber == 3)
+        {
+             input = keyMap.car3.move.ReadValue<Vector2>();
+            if (keyMap.car3.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
+            if (keyMap.car3.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
+        }
+        else if (playerNumber == 4)
+        {
+            input = keyMap.car1.move.ReadValue<Vector2>();
+            if (keyMap.car1.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
+            if (keyMap.car1.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
+        }
+        
+        throttleValue = input.y;
+        steerValue = input.x;
     }
     #endregion
 }

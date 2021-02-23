@@ -24,7 +24,7 @@ public partial class @inputMap : IInputActionCollection2, IDisposable
     ""name"": ""inputMap"",
     ""maps"": [
         {
-            ""name"": ""car"",
+            ""name"": ""car1"",
             ""id"": ""a80f6f62-bfcc-4dd5-bd44-3edc97854be8"",
             ""actions"": [
                 {
@@ -123,14 +123,224 @@ public partial class @inputMap : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""car2"",
+            ""id"": ""f8e04e0e-7e70-4a71-ab94-d2877fac9659"",
+            ""actions"": [
+                {
+                    ""name"": ""move"",
+                    ""type"": ""Value"",
+                    ""id"": ""5443bd1f-b43a-4648-a830-7128b837bc92"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""speedBurst"",
+                    ""type"": ""Value"",
+                    ""id"": ""a1585016-285d-401f-bc0a-34e4b5774893"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""37c52283-22f3-4886-8175-20af80e9ab8a"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""c5d7ab29-91eb-40fb-aff1-d1ff4cfa01a3"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""539d09f2-df49-440f-94c1-6099df017a58"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""5a89cf30-18f1-41df-813c-7672140dfdca"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""38f5fa80-6a2b-40d1-86c1-a3ea0b5b996f"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""394433e5-6aa4-49bd-914b-46aaca5101fd"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""774e3b85-4cda-4371-88eb-0c4d6d8e5938"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""speedBurst"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""car3"",
+            ""id"": ""74396619-45ff-471e-8b24-a2c7522613c2"",
+            ""actions"": [
+                {
+                    ""name"": ""move"",
+                    ""type"": ""Value"",
+                    ""id"": ""c0343e47-fccc-4be1-93cb-ca6f610dbf95"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""speedBurst"",
+                    ""type"": ""Value"",
+                    ""id"": ""6e8b1ad0-798b-42c2-abde-73223729f8c0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e0ad1562-a8d5-4a71-891e-0772e5e199f0"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""ccdf23ac-bbd1-4dd5-acc9-d899d34daaea"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""aae5fdaf-c66a-4af8-b97c-3d495476129e"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""3fd8780e-2072-4162-ae73-918517eaa5d9"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""0707f020-4fc9-4a17-9805-589150ec7287"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""2aab1183-ebde-4c3e-8772-8f8adb0c60a6"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dfad0fb6-29ce-4160-a180-f3202ec14091"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""speedBurst"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // car
-        m_car = asset.FindActionMap("car", throwIfNotFound: true);
-        m_car_move = m_car.FindAction("move", throwIfNotFound: true);
-        m_car_speedBurst = m_car.FindAction("speedBurst", throwIfNotFound: true);
+        // car1
+        m_car1 = asset.FindActionMap("car1", throwIfNotFound: true);
+        m_car1_move = m_car1.FindAction("move", throwIfNotFound: true);
+        m_car1_speedBurst = m_car1.FindAction("speedBurst", throwIfNotFound: true);
+        // car2
+        m_car2 = asset.FindActionMap("car2", throwIfNotFound: true);
+        m_car2_move = m_car2.FindAction("move", throwIfNotFound: true);
+        m_car2_speedBurst = m_car2.FindAction("speedBurst", throwIfNotFound: true);
+        // car3
+        m_car3 = asset.FindActionMap("car3", throwIfNotFound: true);
+        m_car3_move = m_car3.FindAction("move", throwIfNotFound: true);
+        m_car3_speedBurst = m_car3.FindAction("speedBurst", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -187,34 +397,34 @@ public partial class @inputMap : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // car
-    private readonly InputActionMap m_car;
-    private ICarActions m_CarActionsCallbackInterface;
-    private readonly InputAction m_car_move;
-    private readonly InputAction m_car_speedBurst;
-    public struct CarActions
+    // car1
+    private readonly InputActionMap m_car1;
+    private ICar1Actions m_Car1ActionsCallbackInterface;
+    private readonly InputAction m_car1_move;
+    private readonly InputAction m_car1_speedBurst;
+    public struct Car1Actions
     {
         private @inputMap m_Wrapper;
-        public CarActions(@inputMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @move => m_Wrapper.m_car_move;
-        public InputAction @speedBurst => m_Wrapper.m_car_speedBurst;
-        public InputActionMap Get() { return m_Wrapper.m_car; }
+        public Car1Actions(@inputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @move => m_Wrapper.m_car1_move;
+        public InputAction @speedBurst => m_Wrapper.m_car1_speedBurst;
+        public InputActionMap Get() { return m_Wrapper.m_car1; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CarActions set) { return set.Get(); }
-        public void SetCallbacks(ICarActions instance)
+        public static implicit operator InputActionMap(Car1Actions set) { return set.Get(); }
+        public void SetCallbacks(ICar1Actions instance)
         {
-            if (m_Wrapper.m_CarActionsCallbackInterface != null)
+            if (m_Wrapper.m_Car1ActionsCallbackInterface != null)
             {
-                @move.started -= m_Wrapper.m_CarActionsCallbackInterface.OnMove;
-                @move.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnMove;
-                @move.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnMove;
-                @speedBurst.started -= m_Wrapper.m_CarActionsCallbackInterface.OnSpeedBurst;
-                @speedBurst.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnSpeedBurst;
-                @speedBurst.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnSpeedBurst;
+                @move.started -= m_Wrapper.m_Car1ActionsCallbackInterface.OnMove;
+                @move.performed -= m_Wrapper.m_Car1ActionsCallbackInterface.OnMove;
+                @move.canceled -= m_Wrapper.m_Car1ActionsCallbackInterface.OnMove;
+                @speedBurst.started -= m_Wrapper.m_Car1ActionsCallbackInterface.OnSpeedBurst;
+                @speedBurst.performed -= m_Wrapper.m_Car1ActionsCallbackInterface.OnSpeedBurst;
+                @speedBurst.canceled -= m_Wrapper.m_Car1ActionsCallbackInterface.OnSpeedBurst;
             }
-            m_Wrapper.m_CarActionsCallbackInterface = instance;
+            m_Wrapper.m_Car1ActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @move.started += instance.OnMove;
@@ -226,8 +436,100 @@ public partial class @inputMap : IInputActionCollection2, IDisposable
             }
         }
     }
-    public CarActions @car => new CarActions(this);
-    public interface ICarActions
+    public Car1Actions @car1 => new Car1Actions(this);
+
+    // car2
+    private readonly InputActionMap m_car2;
+    private ICar2Actions m_Car2ActionsCallbackInterface;
+    private readonly InputAction m_car2_move;
+    private readonly InputAction m_car2_speedBurst;
+    public struct Car2Actions
+    {
+        private @inputMap m_Wrapper;
+        public Car2Actions(@inputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @move => m_Wrapper.m_car2_move;
+        public InputAction @speedBurst => m_Wrapper.m_car2_speedBurst;
+        public InputActionMap Get() { return m_Wrapper.m_car2; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Car2Actions set) { return set.Get(); }
+        public void SetCallbacks(ICar2Actions instance)
+        {
+            if (m_Wrapper.m_Car2ActionsCallbackInterface != null)
+            {
+                @move.started -= m_Wrapper.m_Car2ActionsCallbackInterface.OnMove;
+                @move.performed -= m_Wrapper.m_Car2ActionsCallbackInterface.OnMove;
+                @move.canceled -= m_Wrapper.m_Car2ActionsCallbackInterface.OnMove;
+                @speedBurst.started -= m_Wrapper.m_Car2ActionsCallbackInterface.OnSpeedBurst;
+                @speedBurst.performed -= m_Wrapper.m_Car2ActionsCallbackInterface.OnSpeedBurst;
+                @speedBurst.canceled -= m_Wrapper.m_Car2ActionsCallbackInterface.OnSpeedBurst;
+            }
+            m_Wrapper.m_Car2ActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @move.started += instance.OnMove;
+                @move.performed += instance.OnMove;
+                @move.canceled += instance.OnMove;
+                @speedBurst.started += instance.OnSpeedBurst;
+                @speedBurst.performed += instance.OnSpeedBurst;
+                @speedBurst.canceled += instance.OnSpeedBurst;
+            }
+        }
+    }
+    public Car2Actions @car2 => new Car2Actions(this);
+
+    // car3
+    private readonly InputActionMap m_car3;
+    private ICar3Actions m_Car3ActionsCallbackInterface;
+    private readonly InputAction m_car3_move;
+    private readonly InputAction m_car3_speedBurst;
+    public struct Car3Actions
+    {
+        private @inputMap m_Wrapper;
+        public Car3Actions(@inputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @move => m_Wrapper.m_car3_move;
+        public InputAction @speedBurst => m_Wrapper.m_car3_speedBurst;
+        public InputActionMap Get() { return m_Wrapper.m_car3; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Car3Actions set) { return set.Get(); }
+        public void SetCallbacks(ICar3Actions instance)
+        {
+            if (m_Wrapper.m_Car3ActionsCallbackInterface != null)
+            {
+                @move.started -= m_Wrapper.m_Car3ActionsCallbackInterface.OnMove;
+                @move.performed -= m_Wrapper.m_Car3ActionsCallbackInterface.OnMove;
+                @move.canceled -= m_Wrapper.m_Car3ActionsCallbackInterface.OnMove;
+                @speedBurst.started -= m_Wrapper.m_Car3ActionsCallbackInterface.OnSpeedBurst;
+                @speedBurst.performed -= m_Wrapper.m_Car3ActionsCallbackInterface.OnSpeedBurst;
+                @speedBurst.canceled -= m_Wrapper.m_Car3ActionsCallbackInterface.OnSpeedBurst;
+            }
+            m_Wrapper.m_Car3ActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @move.started += instance.OnMove;
+                @move.performed += instance.OnMove;
+                @move.canceled += instance.OnMove;
+                @speedBurst.started += instance.OnSpeedBurst;
+                @speedBurst.performed += instance.OnSpeedBurst;
+                @speedBurst.canceled += instance.OnSpeedBurst;
+            }
+        }
+    }
+    public Car3Actions @car3 => new Car3Actions(this);
+    public interface ICar1Actions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnSpeedBurst(InputAction.CallbackContext context);
+    }
+    public interface ICar2Actions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnSpeedBurst(InputAction.CallbackContext context);
+    }
+    public interface ICar3Actions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnSpeedBurst(InputAction.CallbackContext context);
