@@ -373,7 +373,7 @@ public class CarController : MonoBehaviour
     #region Effects
 
 
-    void EngineSound()
+    private void EngineSound()
     {
 
         if (nitroActive)
@@ -381,14 +381,15 @@ public class CarController : MonoBehaviour
             if (soundCoroutine != null) StopCoroutine(soundCoroutine);
             nitroParticle.Play();
             soundTransition = true;
-            engineAudioSource.volume = Mathf.Lerp(0.1f, 1f, speed / 70f * 1.2f);
-            engineAudioSource.pitch = Mathf.Lerp(0.3f, 1f, speed / 70f + (Mathf.Sin(Time.time) * .1f));
+            engineAudioSource.volume = Mathf.Lerp(0.1f, 1f, speed / 30f * 1.2f);
+            engineAudioSource.pitch = Mathf.Lerp(0.3f, 1f, speed / 30f + (Mathf.Sin(Time.time) * .1f));
 
         }
         else if (soundCoroutine == null && soundTransition) StartCoroutine(SmoothSoundTransition());
 
         else nitroParticle.Stop();
     }
+
 
     private IEnumerator SmoothSoundTransition()
     {
@@ -400,7 +401,7 @@ public class CarController : MonoBehaviour
         while (elapsedTime < waitTime)
         {
             engineAudioSource.volume = Mathf.Lerp(startVolume, 0f, (elapsedTime / waitTime));
-            engineAudioSource.pitch = Mathf.Lerp(0.3f, 1f, speed / 70f + (Mathf.Sin(Time.time) * .1f));
+            engineAudioSource.pitch = Mathf.Lerp(0.3f, 1f, speed + (Mathf.Sin(Time.time) * .1f));
             elapsedTime += Time.deltaTime;
             yield return new WaitForFixedUpdate();
         }
@@ -460,22 +461,22 @@ public class CarController : MonoBehaviour
 
     private void TemporaryMultiPlayerControls()
     {
-        Vector2 input=Vector2.zero;
+        Vector2 input = Vector2.zero;
         if (playerNumber == 1)
         {
-             input = keyMap.car1.move.ReadValue<Vector2>();
+            input = keyMap.car1.move.ReadValue<Vector2>();
             if (keyMap.car1.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
             if (keyMap.car1.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
         }
         else if (playerNumber == 2)
         {
-             input = keyMap.car2.move.ReadValue<Vector2>();
+            input = keyMap.car2.move.ReadValue<Vector2>();
             if (keyMap.car2.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
             if (keyMap.car2.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
         }
         else if (playerNumber == 3)
         {
-             input = keyMap.car3.move.ReadValue<Vector2>();
+            input = keyMap.car3.move.ReadValue<Vector2>();
             if (keyMap.car3.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
             if (keyMap.car3.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
         }
@@ -485,7 +486,7 @@ public class CarController : MonoBehaviour
             if (keyMap.car1.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
             if (keyMap.car1.speedBurst.WasReleasedThisFrame()) nitroButtonHeld = false;
         }
-        
+
         throttleValue = input.y;
         steerValue = input.x;
     }

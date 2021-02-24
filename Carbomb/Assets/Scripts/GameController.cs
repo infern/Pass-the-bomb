@@ -214,17 +214,4 @@ public class GameController : MonoBehaviour
         cars = cars.OrderBy(x => x.GetComponent<CarController>().bombedCount).ToList();
     }
 
-
-
-
-
-
-
-
-    public class Score
-    {
-        public int score;
-        public CarController car;
-    }
-
 }

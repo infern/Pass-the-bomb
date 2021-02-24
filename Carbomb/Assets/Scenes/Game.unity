@@ -1645,8 +1645,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.6509434, g: 0.6509434, b: 0.6509434, a: 1}
-  m_Intensity: 1.35
+  m_Color: {r: 0.9716981, g: 0.82961017, b: 0.82961017, a: 1}
+  m_Intensity: 2.26
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1933,7 +1933,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6c920d33d1e4a074f98f2460c8974f49, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 667bf01769cfa3246b944f5d9e8af854, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2246,7 +2246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCount: 4
-  timeLeft: 70
+  timeLeft: 80
   testMode: 0
   gameActive: 0
   floor: {fileID: 1613265077}
@@ -4795,7 +4795,7 @@ Transform:
   m_GameObject: {fileID: 1963432279}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.48, y: 0.1, z: 0.48}
+  m_LocalScale: {x: 0.59, y: 0.1, z: 0.59}
   m_Children:
   - {fileID: 857769856}
   m_Father: {fileID: 1179658404}
