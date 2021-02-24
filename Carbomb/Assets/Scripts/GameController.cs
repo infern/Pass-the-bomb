@@ -7,6 +7,7 @@ using System.Linq;
 
 public class GameController : MonoBehaviour
 {
+    #region Variables
 
     [Header("Status")]
     [SerializeField] [Range(2, 4)] private int playerCount = 0;
@@ -23,7 +24,6 @@ public class GameController : MonoBehaviour
     [SerializeField] Transform carFolder;
     private List<CarController> cars;
     private List<CarController> bombTargets;
-
 
 
     [Header("UI")]
@@ -44,7 +44,9 @@ public class GameController : MonoBehaviour
     [SerializeField] AudioClip startSFX;
     [SerializeField] AudioClip endSFX;
 
+    #endregion
 
+    #region Defualt Functions
     void Start()
     {
         if (!testMode)
@@ -61,7 +63,10 @@ public class GameController : MonoBehaviour
         TimeLeftCountDown();
     }
 
+    #endregion
 
+    #region Game
+    //Game start, cars are activated after countdown
     private IEnumerator CountDownToStart()
     {
         effectsAudioSource.clip = tickSFX;
@@ -87,11 +92,46 @@ public class GameController : MonoBehaviour
         {
             car.active = true;
             car.FreezePositionY();
-
         }
         yield return new WaitForSeconds(0.68f);
         countDownObject.SetActive(false);
         bombScript.StartCoroutine(bombScript.PassToPlayer(RandomPlayer(), 1f, true));
+    }
+
+
+    //Timer before game finishes
+    private void TimeLeftCountDown()
+    {
+        if (gameActive)
+        {
+            timeLeft -= Time.deltaTime;
+            time.text = string.Format("{0}:{1:00}", (int)timeLeft / 60, (int)timeLeft % 60);
+            if (timeLeft <= 0) GameOver();
+        }
+    }
+
+
+    private void GameOver()
+    {
+        Destroy(bombObject);
+        endGamePanel.SetActive(true);
+        SortCarsByScore();
+        //Activates x podium slots, where x is number of players
+        for (int i = 0; i < cars.Count; i++)
+        {
+            podiums[i].gameObject.SetActive(true);
+            podiums[i].SetValues(cars[i].gameObject.name, cars[i].bombedCount);
+        }
+        foreach (CarController car in cars)
+        {
+            car.active = false;
+            car.ApplyStun(99f, true);
+        }
+        effectsAudioSource.clip = endSFX;
+        effectsAudioSource.Play();
+        soundTrackAudioSource.Stop();
+        gameActive = false;
+        time.text = "0:00";
     }
 
     //Random point within playable section of the map
@@ -100,6 +140,9 @@ public class GameController : MonoBehaviour
         return new Vector3((Random.Range(floor.bounds.min.x, floor.bounds.max.x) / 1.5f), 0.14f, (Random.Range(floor.bounds.min.z, floor.bounds.max.z) / 1.5f));
     }
 
+    #endregion
+
+    #region Player
     //Creates cars, changes their colors, adjusts spawn locations and activates UI
     private void AssignObjectsToPlayers()
     {
@@ -153,7 +196,7 @@ public class GameController : MonoBehaviour
     }
 
 
-    //Gives bomb to player with highest score, if there are multiple players with same score, target will be randomed between them
+    //Returns player with highest score, if there are multiple players with same score, target will be randomed between them
     public CarController HighestScoreBombTargets()
     {
         int sameScore = 0;
@@ -170,48 +213,10 @@ public class GameController : MonoBehaviour
         return target;
     }
 
-
-
-    //Timer before game finishes
-    private void TimeLeftCountDown()
-    {
-        if (gameActive)
-        {
-            timeLeft -= Time.deltaTime;
-            time.text = string.Format("{0}:{1:00}", (int)timeLeft / 60, (int)timeLeft % 60);
-            if (timeLeft <= 0) GameOver();
-        }
-
-    }
-
-    private void GameOver()
-    {
-        Destroy(bombObject);
-        endGamePanel.SetActive(true);
-        SortCarsByScore();
-        //Activates x podium slots, where x is number of players
-        for (int i = 0; i < cars.Count; i++)
-        {
-            podiums[i].gameObject.SetActive(true);
-            podiums[i].SetValues(cars[i].gameObject.name, cars[i].bombedCount);
-        }
-        foreach (CarController car in cars)
-        {
-            car.active = false;
-            car.ApplyStun(99f, true);
-        }
-        effectsAudioSource.clip = endSFX;
-        effectsAudioSource.Play();
-        soundTrackAudioSource.Stop();
-        gameActive = false;
-        time.text = "0:00";
-    }
-
-
-
     private void SortCarsByScore()
     {
         cars = cars.OrderBy(x => x.GetComponent<CarController>().bombedCount).ToList();
     }
+    #endregion
 
 }

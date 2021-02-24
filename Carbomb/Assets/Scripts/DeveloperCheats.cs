@@ -11,6 +11,7 @@ public class DeveloperCheats : MonoBehaviour
 
     void Update()
     {
+        //Restars scene
         if (cheatsActive)
         {
             if (Input.GetKeyDown("f1")) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

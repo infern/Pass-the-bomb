@@ -25,9 +25,8 @@ public class BombScript : MonoBehaviour
     [SerializeField] Camera cam;
     [SerializeField] Transform splashCanvas;
     [SerializeField] Animator animator;
-
     private CarController trackedTarget;
-    public List<Transform> recentTargets;
+    [HideInInspector] public List<Transform> recentTargets;
 
     [Header("Other")]
     private Vector3 trackedPos;
@@ -38,7 +37,6 @@ public class BombScript : MonoBehaviour
     {
         fixedRotation = transform.rotation;
         explosionTimer = explosionTimeToExplode;
-
     }
 
 
@@ -48,7 +46,7 @@ public class BombScript : MonoBehaviour
         if (owned) Timer();
     }
 
-    //Prevent bomb from changing rotation and local position
+    //Prevent bomb from changing rotation and position
     void LateUpdate()
     {
         transform.rotation = fixedRotation;
@@ -57,12 +55,7 @@ public class BombScript : MonoBehaviour
             if (!tracking) transform.localPosition = new Vector3(0, 0, 0);
             else trackedPos = trackedTarget.transform.position;   // #1
         }
-
-
     }
-
-
-
 
 
     //Timer for bomb explosion
@@ -83,16 +76,14 @@ public class BombScript : MonoBehaviour
 
 
 
-    //Smooth bomb position change to new holder (collided target)
+    //Smooth bomb position change to new holder, target = collided car, delay = time it takes for bomb to start moving, instant = changes bomb's position without lerp
     public IEnumerator PassToPlayer(CarController target, float delay, bool instant)
     {
         yield return new WaitForSeconds(delay);
         animator.Play("bombTransfer");
         audioSource2.Play();
         target.bomb = this;
-
         tracking = true;
-
         if (transform.parent != null) transform.parent = null;
         Vector3 startPosition = transform.position;
         trackedTarget = target;
@@ -122,7 +113,7 @@ public class BombScript : MonoBehaviour
 
     }
 
-    //Kill holder and everyone in small radius around him 
+    //Kill holder, apply stun and stick bomb to player with highest score after delay
     void Explode()
     {
         GameObject explosion = Instantiate(explosionObject, new Vector3(transform.position.x, 2f, transform.position.z), Quaternion.identity);

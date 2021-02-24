@@ -18,7 +18,7 @@ public class PlayerStats : MonoBehaviour
         bombedTMP.text = "0";
     }
 
-
+    //Changes scale of fuel bar when its being drained/refilled
     public void AdjustBar(float fillAmount)
     {
         fillAmount = Mathf.Clamp01(fillAmount);

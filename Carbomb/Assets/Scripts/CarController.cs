@@ -6,7 +6,6 @@ public class CarController : MonoBehaviour
 {
     #region Variables
 
-
     [Header("Status")]
     public bool active = false;
     public int playerNumber = 0;
@@ -71,7 +70,6 @@ public class CarController : MonoBehaviour
     private ParticleSystem.EmissionModule trailEmission;
     private ParticleSystem.MinMaxCurve trailCurve;
 
-
     #endregion
 
     #region Defualt Functions
@@ -89,7 +87,6 @@ public class CarController : MonoBehaviour
     void Awake()
     {
         keyMap = new inputMap();
-
         trailEmission = trailParticle.emission;
         trailCurve = trailEmission.rateOverTime;
         rigidBody.centerOfMass = centerOfMass.localPosition;
@@ -107,23 +104,20 @@ public class CarController : MonoBehaviour
         {
             ReadInput();
             Nitro();
+            ParticleEffects();
         }
 
-        EngineSound();
+        NitroSoundAndParticle();
         CheckForBlock();
         WheelRotation();
-        ParticleEffects();
         StunDuration();
         AdjustFuelBar();
-
-
     }
 
 
     void FixedUpdate()
     {
         WheelMovement();
-
         //Prevent car from rotating on x and z, doesn't trigger while reflecting to avoid rigidbody jitter
         if (!reflecting) rigidBody.rotation = Quaternion.Euler(0, rigidBody.rotation.eulerAngles.y, 0);
         if (grounded) transform.position = new Vector3(transform.position.x, groundLevel, transform.position.z);
@@ -134,6 +128,7 @@ public class CarController : MonoBehaviour
     #region Movement
     void ReadInput()
     {
+        TemporaryMultiPlayerControls();
         /*
         Vector2 input = keyMap.car3.move.ReadValue<Vector2>();
         if (keyMap.car3.speedBurst.WasPressedThisFrame()) nitroButtonHeld = true;
@@ -141,20 +136,18 @@ public class CarController : MonoBehaviour
          throttleValue = input.y;
          steerValue = input.x;
         */
-        TemporaryMultiPlayerControls();
-
     }
 
-    //Apply torque to wheel colliders which changes movement
+    //Add torque to wheel colliders which applies movement to a car
     void WheelMovement()
     {
         if (!stunned)
         {
+            //If nitro is active, torque will have higher value 
             float bonus = !nitroActive ? (motorTorque * throttleValue) : (motorTorque * throttleValue) * nitroSpeedMultiplier;
             foreach (WheelCollider wheel in wheelsThrottle) wheel.motorTorque = bonus;
             foreach (WheelCollider wheel in wheelsSteer) wheel.steerAngle = steerMax * steerValue;
         }
-
     }
 
     //Rotate every wheel mesh accordingly to its parent wheel collider
@@ -175,7 +168,7 @@ public class CarController : MonoBehaviour
 
     }
 
-    // Increase motorTorque in WheelMovement() if nitro button is held and car has fuel
+    // Increase car speed if nitro button is held and fuel is not empty
     void Nitro()
     {
         if (nitroButtonHeld && !blocked)
@@ -240,7 +233,7 @@ public class CarController : MonoBehaviour
         }
     }
 
-    //Become invulnerable and start blinking effect after taking damage
+    //Become invulnerable after taking damage
     private IEnumerator RecoverFromDamage()
     {
         recovering = true;
@@ -256,8 +249,8 @@ public class CarController : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
+        //Checks if car collides with its front side
         Vector3 relativePoint = transform.InverseTransformPoint(col.gameObject.transform.position);
-        //If car has bomb and collides with object with its front side, it will be reflected accordingly to collision point
         if (relativePoint.z > 0)
         {
             if (!collisionSoundCooldown)
@@ -269,6 +262,7 @@ public class CarController : MonoBehaviour
                 StartCoroutine(CollisionSoundCooldown());
             }
 
+            //If car has bomb and collides, it will be reflected accordingly to collision point
             if (bomb != null && (col.gameObject.CompareTag("Wall") || col.gameObject.CompareTag("Car")) && speed > 50f) InstantReflect(col.contacts[0].normal);
 
         }
@@ -288,6 +282,7 @@ public class CarController : MonoBehaviour
         }
     }
 
+    //Prevents collision sound from playing multiple times within short period of time
     private IEnumerator CollisionSoundCooldown()
     {
         collisionSoundCooldown = true;
@@ -372,8 +367,8 @@ public class CarController : MonoBehaviour
 
     #region Effects
 
-
-    private void EngineSound()
+    //Sound effect that plays when nitro is active, its volume and pitch are changed based on current speed
+    private void NitroSoundAndParticle()
     {
 
         if (nitroActive)
@@ -390,7 +385,7 @@ public class CarController : MonoBehaviour
         else nitroParticle.Stop();
     }
 
-
+    //Gradually change nitro volume to 0 (this way sound doesn't go from x to 0 instantly)
     private IEnumerator SmoothSoundTransition()
     {
         nitroParticle.Stop();
@@ -407,10 +402,10 @@ public class CarController : MonoBehaviour
         }
         soundTransition = false;
     }
+
+    //Trail left behind when car moves around
     void ParticleEffects()
     {
-        //if (speed > 40f) trailParticle.Play();
-        //  else trailParticle.Stop();
         trailCurve.constant = (int)(speed * 1.5f);
         trailEmission.rateOverTime = trailCurve;
     }
@@ -458,7 +453,7 @@ public class CarController : MonoBehaviour
         grounded = true;
     }
 
-
+    //Temporary method that reads input based on player number
     private void TemporaryMultiPlayerControls()
     {
         Vector2 input = Vector2.zero;
